@@ -1,354 +1,698 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đếm Ngày Trở Về</title>
-    
+    <title>帰り道のカウントダウン</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho+B1:wght@500;700&display=swap"
+        rel="stylesheet">
+
     <style>
-        html {
-            font-size: 14px;
-            font-family: "Funnel Display", sans-serif;
-            font-weight: 400;
-            font-style: normal;
+        :root {
+            --bg-base: #f4efe6;
+            --ink: #2f2a26;
+            --accent: #b11f2f;
+            --accent-dark: #7c1d29;
+            --indigo: #2a4b6b;
+            --gold: #c79a37;
+            --paper: rgba(255, 252, 246, 0.96);
+            --paper-stroke: #e0d4c4;
+            --muted: #8c7b6b;
+            --shadow: rgba(47, 42, 38, 0.08);
         }
+
+        html {
+            font-size: 15px;
+            font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+            color: var(--ink);
+            background-color: var(--bg-base);
+        }
+
         body {
             margin: 0;
-            font-size: 14px;
-            color: white;
+            background: linear-gradient(135deg, #fdf8f0 0%, #f1e4d4 55%, #f6efe4 100%);
+            min-height: 100vh;
         }
-        @import url("https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@700&display=swap");
 
         .container.bg {
-            background-color: hsl(235, 16%, 14%);
             min-height: 100vh;
-            background-repeat: no-repeat;
-            background-position: top, bottom;
-            background-size: contain;
             display: flex;
-            justify-content: center;
             align-items: center;
-            flex-direction: column;
+            justify-content: center;
+            padding: clamp(2rem, 4vw, 4rem);
             position: relative;
         }
+
+        .container.bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(193, 151, 58, 0.18) 0, transparent 50%),
+                radial-gradient(circle at 80% 0%, rgba(177, 31, 47, 0.08) 0, transparent 55%),
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0 2px, transparent 2px 40px);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
         .main-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 10% 0;
+            position: relative;
+            width: min(100%, 1080px);
+            padding: clamp(2.5rem, 5vw, 4rem);
+            border-radius: 32px;
+            background: var(--paper);
+            border: 1px solid rgba(231, 221, 205, 0.9);
+            box-shadow: 0 30px 50px var(--shadow);
+            backdrop-filter: blur(4px);
         }
+
+        .main-box::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 24px;
+            border: 1px solid var(--paper-stroke);
+            pointer-events: none;
+        }
+
         .heading {
-            font-size: 2em;
-            letter-spacing: 0.5rem;
+            font-family: "Shippori Mincho B1", "Yu Mincho", serif;
+            font-size: clamp(2rem, 3.4vw, 3.2rem);
+            text-align: center;
+            letter-spacing: 0.08em;
+            margin: 0 auto clamp(1.5rem, 3vw, 2.4rem);
+            color: var(--accent-dark);
+            position: relative;
         }
+
+        .heading::after {
+            content: "";
+            display: block;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--accent) 40%, var(--gold) 60%, transparent 100%);
+            margin: clamp(0.75rem, 1.5vw, 1.2rem) auto 0;
+        }
+
+        .intro {
+            text-align: center;
+            color: var(--muted);
+            margin: 0 auto clamp(2rem, 4vw, 3rem);
+            line-height: 1.8;
+            max-width: 56ch;
+        }
+
         .box {
             display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            flex-wrap: wrap;
+            margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
         }
+
         .card {
-            margin: 2em 0.5em;
-            height: 150px;
-            width: 150px;
             position: relative;
-            perspective: 300px;
+            width: clamp(120px, 18vw, 180px);
+            padding: clamp(1.5rem, 2.5vw, 2.2rem) clamp(1rem, 2vw, 1.8rem);
+            border-radius: 22px;
+            border: 1px solid var(--paper-stroke);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 240, 226, 0.95) 100%);
+            box-shadow: 0 18px 32px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            overflow: hidden;
         }
-        .card-flip {
-            background-color: hsl(236, 21%, 26%);
-            height: 50%;
-            width: 100%;
-            border-radius: 0.3em;
-        }
-        .counter {
-            position: absolute;
-            font-size: 4em;
-            font-weight: 800;
-            color: hsl(345, 95%, 68%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .denoters {
-            text-align: center;
-            color: rgb(125 123 152);
-            text-transform: uppercase;
-            font-size: 1.2em;
-        }
-        .flipper {
-            animation: flip 0.3s;
-            transform-origin: bottom;
+
+        .card::before {
+            content: "";
             position: absolute;
             top: 0;
-            z-index: 1;
-            display: none;
-            transition: 0.1s;
-        }
-        .card-flip.upper {
-            background: linear-gradient(to top, #2f3145c7, hsl(236, 21%, 26%) 88%);
-        }
-        .card-flip.lower {
-            background: linear-gradient(to bottom, #242635c7, hsl(236, 21%, 26%) 88%);
-        }
-        .card-flip.upper::after {
-            content: "";
-            background: black;
-            height: 0.6em;
-            width: 0.6em;
-            position: absolute;
-            border-top-right-radius: 2em;
-            border-bottom-right-radius: 2em;
-            z-index: 10;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .card-flip.lower::before {
-            content: "";
-            background: black;
-            height: 0.6em;
-            width: 0.6em;
-            position: absolute;
-            border-top-left-radius: 2em;
-            border-bottom-left-radius: 2em;
-            z-index: 10;
-            top: 50%;
-            left: 100%;
-            transform: translate(-100%, -50%);
-        }
-        @keyframes flip {
-            0% {
-                transform: rotateX(0deg);
-                opacity: 1;
-            }
-            25% {
-                opacity: 0.9;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            75% {
-                opacity: 0.7;
-            }
-            100% {
-                transform: rotateX(-180deg);
-                opacity: 0;
-            }
+            left: 14px;
+            right: 14px;
+            height: 6px;
+            border-radius: 0 0 8px 8px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 50%, var(--indigo) 100%);
+            opacity: 0.85;
         }
 
-        /* Progress bar style */
-        .progress-container {
-    width: 100%;
-    height: 10px;
-    background: 
-        hsl(235, 16%, 30%), /* Base background */
-        radial-gradient(circle, hsl(345, 95%, 68%) 10%, transparent 10%) repeat-x; /* Simulated dashed flight path */
-    border-radius: 10px;
-    margin-top: 2em;
-    position: relative;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background-color: hsl(345, 95%, 68%);
-    border-radius: 10px;
-    transition: width 1s ease-in-out;
-    position: relative;
-}
-
-        .progress-bar::before {
-            content: '🎌';
-            position: absolute;
-            top: -15px;
-            left: -30px;  /* Adjust as needed to position the flag */
-            width: 20px;
-            height: 20px;
-            background-size: cover;
-        }
-        .progress-bar::after {
-            content: '🚀';
-            transform: rotate(45deg);
-            position: absolute;
-            top: -15px;
-            right: -30px; /* Adjust as needed to position the flag */
-            width: 20px;
-            height: 20px;
-            background-size: cover;
+        .counter {
+            font-family: "Shippori Mincho B1", "Yu Mincho", serif;
+            font-size: clamp(2.6rem, 5vw, 3.6rem);
+            letter-spacing: 0.18em;
+            color: var(--accent-dark);
+            transition: transform 0.2s ease, color 0.2s ease;
         }
 
-        .progress-chibi {
-            position: absolute;
-            top: -30px;
-            left: 0;
-            width: 30px;
-            height: 30px;
-            background-size: cover;
+        .counter.changing {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .denoters {
+            font-size: 0.95rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .calendar-section {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            gap: clamp(1.8rem, 4vw, 3rem);
+            align-items: start;
+        }
+
+        .calendar-panel {
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid var(--paper-stroke);
+            border-radius: 22px;
+            padding: clamp(1.5rem, 3vw, 2.4rem);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.6rem);
+        }
+
+        .calendar-header button {
+            background: none;
+            border: 1px solid rgba(177, 31, 47, 0.35);
+            color: var(--accent-dark);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .calendar-header button:hover,
+        .calendar-header button:focus {
+            background-color: rgba(177, 31, 47, 0.08);
+            color: var(--accent);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .calendar-month {
+            font-family: "Shippori Mincho B1", serif;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            letter-spacing: 0.1em;
+            color: var(--ink);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .calendar-weekday {
+            font-size: 0.85rem;
+            text-align: center;
+            color: var(--muted);
+            letter-spacing: 0.25em;
+        }
+
+        .calendar-weekday.sunday {
+            color: var(--accent);
+        }
+
+        .calendar-weekday.saturday {
+            color: var(--indigo);
+        }
+
+        .calendar-day {
+            position: relative;
+            min-height: 88px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(229, 218, 203, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0.75rem 0.5rem;
+            gap: 0.35rem;
+            box-shadow: 0 8px 16px rgba(47, 42, 38, 0.06);
+        }
+
+        .calendar-day.empty {
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        .calendar-day .day-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--ink);
+        }
+
+        .calendar-day.sunday .day-number {
+            color: var(--accent);
+        }
+
+        .calendar-day.saturday .day-number {
+            color: var(--indigo);
+        }
+
+        .calendar-day .day-holiday {
+            font-size: 0.78rem;
+            color: var(--accent);
+            letter-spacing: 0.08em;
+        }
+
+        .calendar-day.holiday {
+            background: linear-gradient(150deg, rgba(177, 31, 47, 0.1) 0%, rgba(177, 31, 47, 0.25) 100%);
+            border-color: rgba(177, 31, 47, 0.35);
+        }
+
+        .calendar-day.holiday .day-number,
+        .calendar-day.holiday .day-holiday {
+            color: var(--accent-dark);
+        }
+
+        .calendar-day.today {
+            box-shadow: 0 0 0 3px rgba(199, 154, 55, 0.35);
+            border-color: rgba(199, 154, 55, 0.6);
+        }
+
+        .holiday-panel {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid var(--paper-stroke);
+            border-radius: 22px;
+            padding: clamp(1.6rem, 3vw, 2.2rem);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+        }
+
+        .holiday-panel h2 {
+            font-family: "Shippori Mincho B1", serif;
+            font-size: 1.4rem;
+            margin: 0 0 0.75rem;
+            color: var(--accent-dark);
+        }
+
+        .holiday-description {
+            margin: 0 0 1.5rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .holiday-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .holiday-list li {
+            background: rgba(255, 255, 255, 0.82);
+            border-radius: 16px;
+            border: 1px solid rgba(231, 221, 205, 0.8);
+            padding: 0.85rem 1rem;
+            box-shadow: 0 10px 18px rgba(47, 42, 38, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .holiday-date {
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+        }
+
+        .holiday-name {
+            font-family: "Shippori Mincho B1", serif;
+            font-size: 1.05rem;
+            color: var(--ink);
+            letter-spacing: 0.05em;
+        }
+
+        .holiday-english {
+            font-size: 0.85rem;
+            color: rgba(42, 75, 107, 0.8);
+            letter-spacing: 0.03em;
+        }
+
+        .holiday-list .no-holiday {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.92rem;
         }
 
         @media (max-width: 992px) {
-            .card {
-                width: 125px;
-                height: 125px;
+            .calendar-section {
+                grid-template-columns: 1fr;
             }
-        }
-        @media (max-width: 768px) {
-            body {
-                font-size: 12px;
-            }
-            .card {
-                width: 100px;
-                height: 100px;
-            }
-        }
-        @media (max-width: 567px) {
-            body {
-                font-size: 9px;
-            }
-            .card {
-                width: 80px;
-                height: 80px;
-            }
-        }
-        @media (max-width: 375px) {
-            body {
-                font-size: 8px;
-            }
-            .card {
-                width: 75px;
-                height: 75px;
+
+            .holiday-panel {
+                order: -1;
             }
         }
 
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+
+            .card {
+                width: clamp(110px, 40vw, 150px);
+            }
+
+            .calendar-day {
+                min-height: 80px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .main-box {
+                padding: 2rem 1.5rem;
+            }
+
+            .main-box::before {
+                inset: 10px;
+            }
+
+            .box {
+                gap: 1rem;
+            }
+
+            .calendar-grid {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            html {
+                font-size: 13px;
+            }
+
+            .card {
+                width: 100px;
+            }
+
+            .calendar-header button {
+                width: 38px;
+                height: 38px;
+            }
+        }
     </style>
-    
 </head>
 <body>
     <section class="container bg">
         <div class="main-box">
-            <h1 class="heading">Chúng Ta Còn</h1>
+            <h1 class="heading">帰り道のカウントダウン</h1>
+            <p class="intro">新しい旅立ちの瞬間までの時を見守りながら、日本の祝日とともに季節の移ろいを感じましょう。</p>
             <div class="box">
                 <div class="card">
-                    <div class="card-flip upper"></div>
-                    <div class="card-flip flipper"></div>
                     <span class="counter" id="day-counter">00</span>
-                    <div class="card-flip lower"></div>
-                    <h2 class="denoters">ngày</h2>
+                    <h2 class="denoters">日</h2>
                 </div>
-
                 <div class="card">
-                    <div class="card-flip upper"></div>
-                    <div class="card-flip flipper"></div>
                     <span class="counter" id="hour-counter">00</span>
-                    <div class="card-flip lower"></div>
-                    <h2 class="denoters">giờ</h2>
+                    <h2 class="denoters">時</h2>
                 </div>
-
                 <div class="card">
-                    <div class="card-flip upper"></div>
-                    <div class="card-flip flipper"></div>
                     <span class="counter" id="minute-counter">00</span>
-                    <div class="card-flip lower"></div>
-                    <h2 class="denoters">phút</h2>
+                    <h2 class="denoters">分</h2>
                 </div>
-
                 <div class="card">
-                    <div class="card-flip upper"></div>
-                    <div class="card-flip flipper"></div>
                     <span class="counter" id="second-counter">00</span>
-                    <div class="card-flip lower"></div>
-                    <h2 class="denoters">giây</h2>
+                    <h2 class="denoters">秒</h2>
                 </div>
             </div>
 
-            <!-- Progress Bars -->
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-chibi" id="progress-chibi"></div>
+            <div class="calendar-section">
+                <div class="calendar-panel">
+                    <div class="calendar-header">
+                        <button type="button" id="prev-month" aria-label="前の月"><span aria-hidden="true">〈</span></button>
+                        <div class="calendar-month" id="calendar-month"></div>
+                        <button type="button" id="next-month" aria-label="次の月"><span aria-hidden="true">〉</span></button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
                 </div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-chibi" id="progress-chibi-2"></div>
-                </div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-chibi" id="progress-chibi-3"></div>
-                </div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-chibi" id="progress-chibi-4"></div>
+                <div class="holiday-panel">
+                    <h2>日本の祝日</h2>
+                    <p class="holiday-description">選択中の月にあたる祝日を一覧にしました。和の彩りを感じてください。</p>
+                    <ul class="holiday-list" id="holiday-list"></ul>
                 </div>
             </div>
         </div>
     </section>
 
-        <script>
-        // Set the start and end dates for the progress bar
-        const startDate = new Date("November 13, 2024 00:00:00").getTime();
-        const endDate = new Date("January 01, 2027 00:00:00").getTime();
-        
-        const numPad = (num, size) => {
-            var s = String(num);
-            while (s.length < (size || 2)) {
-                s = "0" + s;
-            }
-            return s;
-        };
+    <script>
+        const countdownTarget = new Date("January 01, 2027 00:00:00").getTime();
 
-        function secParser(seconds) {
-            let days = Math.floor(seconds / (3600 * 24));
-            seconds -= days * 3600 * 24;
-            let hours = Math.floor(seconds / 3600);
-            seconds -= hours * 3600;
-            let minutes = Math.floor(seconds / 60);
-            seconds -= minutes * 60;
+        const padNumber = (value, size = 2) => String(value).padStart(size, "0");
 
+        function parseSeconds(totalSeconds) {
+            const safeSeconds = Math.max(0, totalSeconds);
+            const days = Math.floor(safeSeconds / (3600 * 24));
+            let remainder = safeSeconds - days * 3600 * 24;
+            const hours = Math.floor(remainder / 3600);
+            remainder -= hours * 3600;
+            const minutes = Math.floor(remainder / 60);
+            const seconds = remainder - minutes * 60;
             return [days, hours, minutes, seconds];
         }
 
-        function flipper(elements, data) {
-            if (time <= 0) clearInterval(id);
-            for (let element in elements) {
-                const flipCard = elements[element].previousSibling.previousSibling;
-                if (elements[element].innerText != data[element]) {
-                    flipCard.setAttribute("style", "display: block;");
-                    elements[element].innerText = numPad(data[element], 2);
+        const dayCounter = document.getElementById("day-counter");
+        const hourCounter = document.getElementById("hour-counter");
+        const minuteCounter = document.getElementById("minute-counter");
+        const secondCounter = document.getElementById("second-counter");
+        const counters = [dayCounter, hourCounter, minuteCounter, secondCounter];
+
+        let remainingSeconds = Math.floor((countdownTarget - Date.now()) / 1000);
+
+        function updateCounters(values) {
+            counters.forEach((counter, index) => {
+                const newValue = padNumber(values[index]);
+                if (counter.textContent !== newValue) {
+                    counter.classList.add("changing");
+                    counter.textContent = newValue;
+                    setTimeout(() => counter.classList.remove("changing"), 180);
                 }
-                setTimeout(() => {
-                    flipCard.setAttribute("style", "display: none;");
-                }, 280);
-            }
-        }
-
-        function updateProgressBar() {
-            const now = Date.now();
-            const timeLeft = endDate - now;
-            const totalTime = endDate - startDate;
-            const progress = (1 - timeLeft / totalTime) * 100;
-            const progressBars = document.querySelectorAll('.progress-bar');
-            const progressChibis = document.querySelectorAll('.progress-chibi');
-
-            progressBars.forEach((bar, index) => {
-                bar.style.width = progress + "%";
-                progressChibis[index].style.left = progress + "%";
             });
         }
 
-        const day = document.getElementById("day-counter");
-        const hour = document.getElementById("hour-counter");
-        const minute = document.getElementById("minute-counter");
-        const seconds = document.getElementById("second-counter");
+        function tickCountdown() {
+            updateCounters(parseSeconds(remainingSeconds));
+            if (remainingSeconds <= 0) {
+                clearInterval(countdownInterval);
+                return;
+            }
+            remainingSeconds -= 1;
+        }
 
-        // Set the initial time left based on the start date
-        let time = Math.floor((endDate - Date.now()) / 1000); // Time left in seconds
+        const countdownInterval = setInterval(tickCountdown, 1000);
+        tickCountdown();
 
-        const id = setInterval(() => {
-            flipper([day, hour, minute, seconds], secParser(time--));
-            updateProgressBar(); // Update the progress bar every second
-        }, 1000);
+        const japaneseHolidays = [
+            { date: "2024-01-01", localName: "元日", englishName: "New Year's Day" },
+            { date: "2024-01-08", localName: "成人の日", englishName: "Coming of Age Day" },
+            { date: "2024-02-11", localName: "建国記念の日", englishName: "National Foundation Day" },
+            { date: "2024-02-12", localName: "振替休日 (建国記念の日)", englishName: "Substitute Holiday" },
+            { date: "2024-02-23", localName: "天皇誕生日", englishName: "Emperor's Birthday" },
+            { date: "2024-03-20", localName: "春分の日", englishName: "Vernal Equinox Day" },
+            { date: "2024-04-29", localName: "昭和の日", englishName: "Showa Day" },
+            { date: "2024-05-03", localName: "憲法記念日", englishName: "Constitution Memorial Day" },
+            { date: "2024-05-04", localName: "みどりの日", englishName: "Greenery Day" },
+            { date: "2024-05-05", localName: "こどもの日", englishName: "Children's Day" },
+            { date: "2024-05-06", localName: "振替休日 (こどもの日)", englishName: "Substitute Holiday" },
+            { date: "2024-07-15", localName: "海の日", englishName: "Marine Day" },
+            { date: "2024-08-11", localName: "山の日", englishName: "Mountain Day" },
+            { date: "2024-08-12", localName: "振替休日 (山の日)", englishName: "Substitute Holiday" },
+            { date: "2024-09-16", localName: "敬老の日", englishName: "Respect for the Aged Day" },
+            { date: "2024-09-22", localName: "秋分の日", englishName: "Autumnal Equinox Day" },
+            { date: "2024-09-23", localName: "振替休日 (秋分の日)", englishName: "Substitute Holiday" },
+            { date: "2024-10-14", localName: "スポーツの日", englishName: "Sports Day" },
+            { date: "2024-11-03", localName: "文化の日", englishName: "Culture Day" },
+            { date: "2024-11-04", localName: "振替休日 (文化の日)", englishName: "Substitute Holiday" },
+            { date: "2024-11-23", localName: "勤労感謝の日", englishName: "Labour Thanksgiving Day" },
+            { date: "2025-01-01", localName: "元日", englishName: "New Year's Day" },
+            { date: "2025-01-13", localName: "成人の日", englishName: "Coming of Age Day" },
+            { date: "2025-02-11", localName: "建国記念の日", englishName: "National Foundation Day" },
+            { date: "2025-02-23", localName: "天皇誕生日", englishName: "Emperor's Birthday" },
+            { date: "2025-02-24", localName: "振替休日 (天皇誕生日)", englishName: "Substitute Holiday" },
+            { date: "2025-03-20", localName: "春分の日", englishName: "Vernal Equinox Day" },
+            { date: "2025-04-29", localName: "昭和の日", englishName: "Showa Day" },
+            { date: "2025-05-03", localName: "憲法記念日", englishName: "Constitution Memorial Day" },
+            { date: "2025-05-04", localName: "みどりの日", englishName: "Greenery Day" },
+            { date: "2025-05-05", localName: "こどもの日", englishName: "Children's Day" },
+            { date: "2025-05-06", localName: "振替休日 (こどもの日)", englishName: "Substitute Holiday" },
+            { date: "2025-07-21", localName: "海の日", englishName: "Marine Day" },
+            { date: "2025-08-11", localName: "山の日", englishName: "Mountain Day" },
+            { date: "2025-09-15", localName: "敬老の日", englishName: "Respect for the Aged Day" },
+            { date: "2025-09-23", localName: "秋分の日", englishName: "Autumnal Equinox Day" },
+            { date: "2025-10-13", localName: "スポーツの日", englishName: "Sports Day" },
+            { date: "2025-11-03", localName: "文化の日", englishName: "Culture Day" },
+            { date: "2025-11-23", localName: "勤労感謝の日", englishName: "Labour Thanksgiving Day" },
+            { date: "2025-11-24", localName: "振替休日 (勤労感謝の日)", englishName: "Substitute Holiday" },
+            { date: "2026-01-01", localName: "元日", englishName: "New Year's Day" },
+            { date: "2026-01-12", localName: "成人の日", englishName: "Coming of Age Day" },
+            { date: "2026-02-11", localName: "建国記念の日", englishName: "National Foundation Day" },
+            { date: "2026-02-23", localName: "天皇誕生日", englishName: "Emperor's Birthday" },
+            { date: "2026-03-20", localName: "春分の日", englishName: "Vernal Equinox Day" },
+            { date: "2026-04-29", localName: "昭和の日", englishName: "Showa Day" },
+            { date: "2026-05-03", localName: "憲法記念日", englishName: "Constitution Memorial Day" },
+            { date: "2026-05-04", localName: "みどりの日", englishName: "Greenery Day" },
+            { date: "2026-05-05", localName: "こどもの日", englishName: "Children's Day" },
+            { date: "2026-05-06", localName: "振替休日 (こどもの日)", englishName: "Substitute Holiday" },
+            { date: "2026-07-20", localName: "海の日", englishName: "Marine Day" },
+            { date: "2026-08-11", localName: "山の日", englishName: "Mountain Day" },
+            { date: "2026-09-21", localName: "敬老の日", englishName: "Respect for the Aged Day" },
+            { date: "2026-09-22", localName: "国民の休日", englishName: "Citizen's Holiday" },
+            { date: "2026-09-23", localName: "秋分の日", englishName: "Autumnal Equinox Day" },
+            { date: "2026-10-12", localName: "スポーツの日", englishName: "Sports Day" },
+            { date: "2026-11-03", localName: "文化の日", englishName: "Culture Day" },
+            { date: "2026-11-23", localName: "勤労感謝の日", englishName: "Labour Thanksgiving Day" }
+        ];
+
+        const calendarGrid = document.getElementById("calendar-grid");
+        const calendarMonth = document.getElementById("calendar-month");
+        const holidayList = document.getElementById("holiday-list");
+        const prevMonthButton = document.getElementById("prev-month");
+        const nextMonthButton = document.getElementById("next-month");
+
+        const weekdayLabels = ["日", "月", "火", "水", "木", "金", "土"];
+
+        function formatISODate(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+
+        function renderCalendar(current) {
+            const year = current.getFullYear();
+            const month = current.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startWeekday = firstDay.getDay();
+
+            calendarMonth.textContent = `${year}年${month + 1}月`;
+            calendarGrid.innerHTML = "";
+
+            weekdayLabels.forEach((label, index) => {
+                const weekdayCell = document.createElement("div");
+                weekdayCell.classList.add("calendar-weekday");
+                if (index === 0) weekdayCell.classList.add("sunday");
+                if (index === 6) weekdayCell.classList.add("saturday");
+                weekdayCell.textContent = label;
+                calendarGrid.appendChild(weekdayCell);
+            });
+
+            for (let i = 0; i < startWeekday; i += 1) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "calendar-day empty";
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            const today = new Date();
+            const todayISO = formatISODate(today);
+
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const date = new Date(year, month, day);
+                const isoDate = formatISODate(date);
+                const weekday = date.getDay();
+
+                const cell = document.createElement("div");
+                cell.classList.add("calendar-day");
+                if (weekday === 0) cell.classList.add("sunday");
+                if (weekday === 6) cell.classList.add("saturday");
+
+                if (isoDate === todayISO) {
+                    cell.classList.add("today");
+                }
+
+                const dayNumber = document.createElement("span");
+                dayNumber.classList.add("day-number");
+                dayNumber.textContent = day;
+                cell.appendChild(dayNumber);
+
+                const holiday = japaneseHolidays.find((item) => item.date === isoDate);
+                if (holiday) {
+                    cell.classList.add("holiday");
+                    const holidayLabel = document.createElement("span");
+                    holidayLabel.classList.add("day-holiday");
+                    holidayLabel.textContent = holiday.localName;
+                    cell.appendChild(holidayLabel);
+                    cell.title = `${holiday.localName} (${holiday.englishName})`;
+                }
+
+                calendarGrid.appendChild(cell);
+            }
+
+            updateHolidayList(year, month);
+        }
+
+        function updateHolidayList(year, month) {
+            const holidaysThisMonth = japaneseHolidays
+                .filter((holiday) => {
+                    const date = new Date(holiday.date);
+                    return date.getFullYear() === year && date.getMonth() === month;
+                })
+                .sort((a, b) => (a.date > b.date ? 1 : -1));
+
+            holidayList.innerHTML = "";
+
+            if (!holidaysThisMonth.length) {
+                const emptyItem = document.createElement("li");
+                emptyItem.classList.add("no-holiday");
+                emptyItem.textContent = "この月に祝日はありません。";
+                holidayList.appendChild(emptyItem);
+                return;
+            }
+
+            holidaysThisMonth.forEach((holiday) => {
+                const date = new Date(holiday.date);
+                const listItem = document.createElement("li");
+
+                const dateText = document.createElement("span");
+                dateText.classList.add("holiday-date");
+                dateText.textContent = `${date.getMonth() + 1}月${date.getDate()}日 (${weekdayLabels[date.getDay()]})`;
+
+                const nameText = document.createElement("span");
+                nameText.classList.add("holiday-name");
+                nameText.textContent = holiday.localName;
+
+                const englishText = document.createElement("span");
+                englishText.classList.add("holiday-english");
+                englishText.textContent = holiday.englishName;
+
+                listItem.appendChild(dateText);
+                listItem.appendChild(nameText);
+                listItem.appendChild(englishText);
+
+                holidayList.appendChild(listItem);
+            });
+        }
+
+        function changeMonth(offset) {
+            const newMonth = new Date(viewingMonth.getFullYear(), viewingMonth.getMonth() + offset, 1);
+            viewingMonth = newMonth;
+            renderCalendar(viewingMonth);
+        }
+
+        let viewingMonth = new Date();
+        viewingMonth.setDate(1);
+        renderCalendar(viewingMonth);
+
+        prevMonthButton.addEventListener("click", () => changeMonth(-1));
+        nextMonthButton.addEventListener("click", () => changeMonth(1));
     </script>
 </body>
 </html>
